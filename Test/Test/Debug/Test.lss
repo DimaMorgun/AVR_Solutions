@@ -1,0 +1,124 @@
+
+Test.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000076  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000000ca  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000000ca  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000000fc  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000020  00000000  00000000  00000138  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   0000049a  00000000  00000000  00000158  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000003aa  00000000  00000000  000005f2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000236  00000000  00000000  0000099c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000024  00000000  00000000  00000bd4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000002ae  00000000  00000000  00000bf8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000d8  00000000  00000000  00000ea6  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000010  00000000  00000000  00000f7e  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	09 c0       	rjmp	.+18     	; 0x14 <__ctors_end>
+   2:	0e c0       	rjmp	.+28     	; 0x20 <__bad_interrupt>
+   4:	0d c0       	rjmp	.+26     	; 0x20 <__bad_interrupt>
+   6:	0c c0       	rjmp	.+24     	; 0x20 <__bad_interrupt>
+   8:	0b c0       	rjmp	.+22     	; 0x20 <__bad_interrupt>
+   a:	0a c0       	rjmp	.+20     	; 0x20 <__bad_interrupt>
+   c:	09 c0       	rjmp	.+18     	; 0x20 <__bad_interrupt>
+   e:	08 c0       	rjmp	.+16     	; 0x20 <__bad_interrupt>
+  10:	07 c0       	rjmp	.+14     	; 0x20 <__bad_interrupt>
+  12:	06 c0       	rjmp	.+12     	; 0x20 <__bad_interrupt>
+
+00000014 <__ctors_end>:
+  14:	11 24       	eor	r1, r1
+  16:	1f be       	out	0x3f, r1	; 63
+  18:	cf e9       	ldi	r28, 0x9F	; 159
+  1a:	cd bf       	out	0x3d, r28	; 61
+  1c:	02 d0       	rcall	.+4      	; 0x22 <main>
+  1e:	29 c0       	rjmp	.+82     	; 0x72 <_exit>
+
+00000020 <__bad_interrupt>:
+  20:	ef cf       	rjmp	.-34     	; 0x0 <__vectors>
+
+00000022 <main>:
+#include <avr/io.h>
+#include <util/delay.h>
+
+int main(void)
+{
+	DDRB = 0x000011;
+  22:	81 e1       	ldi	r24, 0x11	; 17
+  24:	87 bb       	out	0x17, r24	; 23
+	
+    while (1) 
+    {
+		PORTB = 0x000001;
+  26:	81 e0       	ldi	r24, 0x01	; 1
+  28:	88 bb       	out	0x18, r24	; 24
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  2a:	2f e9       	ldi	r18, 0x9F	; 159
+  2c:	36 e8       	ldi	r19, 0x86	; 134
+  2e:	81 e0       	ldi	r24, 0x01	; 1
+  30:	21 50       	subi	r18, 0x01	; 1
+  32:	30 40       	sbci	r19, 0x00	; 0
+  34:	80 40       	sbci	r24, 0x00	; 0
+  36:	e1 f7       	brne	.-8      	; 0x30 <main+0xe>
+  38:	00 c0       	rjmp	.+0      	; 0x3a <main+0x18>
+  3a:	00 00       	nop
+		_delay_ms(500);
+		PORTB = 0x000011;
+  3c:	81 e1       	ldi	r24, 0x11	; 17
+  3e:	88 bb       	out	0x18, r24	; 24
+  40:	e7 ea       	ldi	r30, 0xA7	; 167
+  42:	f1 e6       	ldi	r31, 0x61	; 97
+  44:	31 97       	sbiw	r30, 0x01	; 1
+  46:	f1 f7       	brne	.-4      	; 0x44 <__DATA_REGION_LENGTH__+0x4>
+  48:	00 c0       	rjmp	.+0      	; 0x4a <__DATA_REGION_LENGTH__+0xa>
+  4a:	00 00       	nop
+		_delay_ms(100);
+		PORTB = 0x000010;
+  4c:	90 e1       	ldi	r25, 0x10	; 16
+  4e:	98 bb       	out	0x18, r25	; 24
+  50:	ff e9       	ldi	r31, 0x9F	; 159
+  52:	26 e8       	ldi	r18, 0x86	; 134
+  54:	31 e0       	ldi	r19, 0x01	; 1
+  56:	f1 50       	subi	r31, 0x01	; 1
+  58:	20 40       	sbci	r18, 0x00	; 0
+  5a:	30 40       	sbci	r19, 0x00	; 0
+  5c:	e1 f7       	brne	.-8      	; 0x56 <__DATA_REGION_LENGTH__+0x16>
+  5e:	00 c0       	rjmp	.+0      	; 0x60 <__DATA_REGION_LENGTH__+0x20>
+  60:	00 00       	nop
+		_delay_ms(500);
+		PORTB = 0x000011;
+  62:	88 bb       	out	0x18, r24	; 24
+  64:	87 ea       	ldi	r24, 0xA7	; 167
+  66:	91 e6       	ldi	r25, 0x61	; 97
+  68:	01 97       	sbiw	r24, 0x01	; 1
+  6a:	f1 f7       	brne	.-4      	; 0x68 <__DATA_REGION_LENGTH__+0x28>
+  6c:	00 c0       	rjmp	.+0      	; 0x6e <__DATA_REGION_LENGTH__+0x2e>
+  6e:	00 00       	nop
+  70:	da cf       	rjmp	.-76     	; 0x26 <main+0x4>
+
+00000072 <_exit>:
+  72:	f8 94       	cli
+
+00000074 <__stop_program>:
+  74:	ff cf       	rjmp	.-2      	; 0x74 <__stop_program>
