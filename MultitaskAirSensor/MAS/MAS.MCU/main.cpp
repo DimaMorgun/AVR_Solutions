@@ -21,11 +21,15 @@ int main(void)
 	
 	while (1)
 	{
-		PORTB = 0b001000;
-		PORTB |= (1<<3);
-		_delay_ms(1000);
-		PORTB |= (0<<3);
-		PORTB = 0b000000;
+		//Set
+		//PORTB |= (1<<3);
+		
+		//Clear
+		//PORTB &= ~(1<<3);
+		
+		//Toggle
+		PORTB ^= (1<<3);
+		
 		_delay_ms(1000);
 	}
 }
